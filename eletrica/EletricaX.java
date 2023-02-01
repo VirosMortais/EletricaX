@@ -48,14 +48,16 @@ public class EletricaX {
 				kwTotal += kWContratado;
 				
 				//Llamamos a la función informe para mostrar los datos del cliente
-				informe( in,  numContratos,  kwTotal,  potenciaContratada,  importefinal,  kWContratado);
+				informe( in,  numContratos,  kwTotal,  potenciaContratada,  importefinal, importe,  kWContratado);
+				
+				//descarta la primera línea vacía para evitar problemas con el método nextLine()
+				in.nextLine();
 				
 				do {
 					//Preguntamos si quiere ver otro cliente
 					System.out.print("¿Quieres ver otro cliente? (s/n) ");
 					
-					//descarta la primera línea vacía para evitar problemas con el método nextLine()
-					in.nextLine();
+					
 					
 					String respuesta = in.nextLine();
 				
@@ -100,23 +102,23 @@ public class EletricaX {
 		
 		//Mientras sw sea true se ejecutara el codigo dentro del while
 		while(sw) {
-			//Declaracion de una variable char c1 que contiene el caracter en la posicion 3 de la variable contrato
-			char c1 = contrato.charAt(3);
-			
-			//Si c1 es igual a '-' y contrato no es igual a una expresion regular de 7 digitos se asignara false a la variable sw
-			if((c1 == '-') && !(contrato.matches("\\d{7}"))) 
+
+			//Verifica si el número de contrato tiene el formato correcto. (ddd-dddd)
+			if((contrato.matches("\\d{3}-\\d{4}"))) 
+				// Si cumple con el formato, detiene el bucle
 				sw = false;
 			else {
-				System.out.print(" ");
+			
 				//Se imprime un mensaje de error indicando el formato esperado para el numero de contrato
-				System.err.println("[ERROR]"+
-						 "Su número de contrato, con siguiente formato (ddd-dddd) donde d es un número, por ejemplo (234-5241)\n");	
-				System.out.println("");
+				System.out.println("===================================================================================");
+				System.err.println("[ERROR] El número de contrato debe tener 7 caracteres y seguir el formato ddd-dddd\n");	
 				
+					
 				//Se vuelve a imprimir el mensaje para pedir el numero de contrato
-				System.out.println("Escribir el numero de contrato: ");
+				System.out.print("Escribir el numero de contrato: ");
 				contrato = in.nextLine();
-			}
+				}
+			
 		}
 		
 		//Se retorna el valor de la variable contrato	
@@ -143,7 +145,7 @@ public class EletricaX {
 			
 			// Validar la entrada del usuario, si no es una de las opciones disponibles, volver a preguntar
 			while(!p.contentEquals("3.45")&&!p.contentEquals("4.60")&&!p.contentEquals("5.75")&&!p.contentEquals("6.90")&&!p.contentEquals("8.05")) {
-				System.err.println("[ERROR]");
+				System.err.println("[ERROR] Escribir con '.' porfavor");
 				System.out.print("Potencia contratada? ");
 				p = in.nextLine();
 			}
@@ -190,7 +192,7 @@ public class EletricaX {
 		boolean validar = false;
 		do {
 			// Pide al usuario que introduzca los kW consumidos
-			System.out.println("Introducir los kW consumidos: ");
+			System.out.print("Introducir los kW consumidos: ");
 			kw = in.nextFloat();
 			
 			// Si el valor introducido es menor a 0, muestra un mensaje de error
@@ -245,14 +247,16 @@ public class EletricaX {
 	
 	/*El método informe imprime los datos del cliente, incluyendo el número de contrato, el total de kW consumidos, la potencia contratada, 
 	 * el precio final con incremento, el total de kW facturado de todos los clientes y la información se presenta en un formato establecido.*/
-	public static void informe(Scanner in, String numContratos, float kwTotal, String potenciaContratada, float importefinal, float kWContratado) {
+	public static void informe(Scanner in, String numContratos, float kwTotal, String potenciaContratada, float importefinal,  float importeBase, float kWContratado) {
 		
+		float incremento =  importefinal - importeBase;
 		
 		System.out.println("-----------------------INFORME-------------------------------");
 		System.out.println("Numero de contrato: " + numContratos);
         System.out.println("Total kW: " + kWContratado);
         System.out.println("Potencia: " + potenciaContratada);
-        System.out.println("Incremento Precio a pagar: " + importefinal);        
+		System.out.println("Incremento: " + String.format("%.3f", incremento));
+        System.out.println("Precio a pagar: " + String.format("%.3f", importefinal) + "€");        
         System.out.println("Total kW Facturado (todos los clientes): " + kwTotal);
         System.out.println("-------------------------------------------------------------");		
 	}
@@ -261,7 +265,7 @@ public class EletricaX {
 	/*metodo para agradecer por utilizar el progrma*/
 	public static void fin() {
 		System.out.println("      ______  _        _          _              __   __");
-        System.out.println("     |  ____|| |      | |        (_)             \\ \\ //");
+        System.out.println("     |  ____|| |      | |        (_)             \\ \\ / /");
         System.out.println("     | |__   | |  ___ | |_  _ __  _   ___   __ _  \\ V /");
         System.out.println("     |  __|  | | / _ \\| __|| '__|| | / __| / _` |  > <");
         System.out.println("     | |____ | ||  __/| |_ | |   | || (__ | (_| | / . \\");
